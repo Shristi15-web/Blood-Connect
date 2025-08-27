@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Donor Dashboard - BloodConnect</title>
+  <style>
+    body {
+      margin: 0; font-family: Arial, sans-serif; background: #f8f9fa;
+    }
+    header {
+      background: #e63946; color: white; padding: 15px 30px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    header h2 { margin: 0; }
+    nav a {
+      color: white; margin-left: 20px; text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover { text-decoration: underline; }
+
+    .container {
+      max-width: 900px; margin: 30px auto; padding: 20px;
+      background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h3 { color: #e63946; }
+    table {
+      width: 100%; border-collapse: collapse; margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid #ddd; padding: 10px; text-align: center;
+    }
+    th { background: #e63946; color: white; }
+    button {
+      padding: 8px 15px; background: #e63946; color: white;
+      border: none; border-radius: 5px; cursor: pointer;
+    }
+    button:hover { background: #c92f3d; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h2>BloodConnect - Donor Dashboard</h2>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="#">Profile</a>
+    <a href="#" onclick="logout()">Logout</a>
+  </nav>
+</header>
+
+<div class="container">
+  <h1 id="welcomeMessage"></h1>
+
+  <p>Thank you for registering as a donor. Your details are stored in our system.</p>
+
+  <h3>Upcoming Requests Matching Your Blood Group</h3>
+  <table>
+    <tr>
+      <th>Hospital</th>
+      <th>Location</th>
+      <th>Blood Group</th>
+      <th>Action</th>
+    </tr>
+    <tr>
+      <td>City Hospital</td>
+      <td>New York</td>
+      <td>A+</td>
+      <td><button>Donate</button></td>
+    </tr>
+    <tr>
+      <td>Green Cross</td>
+      <td>Chicago</td>
+      <td>O-</td>
+      <td><button>Donate</button></td>
+    </tr>
+  </table>
+</div>
+<script>const name = localStorage.getItem('name') || 'User';
+document.getElementById('welcomeMessage').innerText = `Welcome, ${name}!`;
+  function logout() {
+    localStorage.clear();
+    window.location.href = 'index.html';
+  }
+
+</script>
+</body>
+</html>

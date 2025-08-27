@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BloodConnect - Save Lives</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 50px;
+      background: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header h2 {
+      color: #e63946;
+      font-weight: bold;
+    }
+
+   /* Desktop links */
+nav a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: #444;
+  font-weight: 500;
+}
+
+nav a:hover {
+  color: #e63946;
+}
+
+/* Hamburger toggle - hidden on desktop */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  margin-left: 15px;
+}
+
+.nav-toggle span {
+  height: 3px;
+  width: 25px;
+  background: #e63946;
+  margin: 4px 0;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  /* Hide links by default */
+  nav a {
+    display: block;
+    margin: 10px 0;
+  }
+
+  .nav-links {
+    display: none;          /* hidden until toggle */
+    flex-direction: column; /* stack links vertically */
+    position: absolute;
+    top: 65px;
+    right: 20px;
+    background: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+
+  .nav-links.show {
+    display: flex; /* show when toggled */
+  }
+
+  /* Show hamburger */
+  .nav-toggle {
+    display: flex;
+  }
+}
+
+
+    .btn-login {
+      margin-left: 15px;
+      padding: 8px 18px;
+      background: #e63946;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s ease;
+    }
+
+    .btn-login:hover {
+      background: #c92f3d;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 80px 20px;
+      background: #e63946;
+      color: white;
+    }
+
+    .hero h1 {
+      font-size: 2.5em;
+    }
+
+    .hero p {
+      font-size: 1.2em;
+      margin-top: 10px;
+    }
+
+    .hero button {
+      margin: 10px;
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-donor {
+      background: #fff;
+      color: #e63946;
+    }
+
+    .btn-hospital {
+      background: #ffcc00;
+      color: black;
+    }
+
+    .btn-hospital:hover {
+      background: #e6b800;
+    }
+
+    .btn-find {
+      background: black;
+      color: white;
+    }
+
+    .btn-search {
+      background: #0066cc;
+      color: white;
+    }
+
+    /* Stats */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 40px auto;
+      text-align: center;
+    }
+
+    .stat-box {
+      background: #e63946;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 200px;
+    }
+
+    .stat-box h2 {
+      margin: 0;
+      font-size: 2em;
+    }
+
+    /* How it works */
+    .how-it-works {
+      padding: 50px 20px;
+      background: #fff;
+      text-align: center;
+    }
+
+    .steps {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 30px;
+    }
+
+    .step {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      width: 220px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Compatibility */
+    .compatibility {
+      padding: 50px 20px;
+      text-align: center;
+    }
+
+    table {
+      margin: auto;
+      border-collapse: collapse;
+      width: 70%;
+    }
+
+    table,
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+
+    th {
+      background: #e63946;
+      color: white;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 50px;
+      padding: 20px;
+      background: #e63946;
+      color: white;
+      text-align: center;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 400px;
+      max-width: 90%;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+
+    .modal-content h2 {
+      margin-top: 0;
+      text-align: center;
+      color: #e63946;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 22px;
+      cursor: pointer;
+      color: #555;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button.submit-btn {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: #e63946;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button.submit-btn:hover {
+      background: #c92f3d;
+    }
+   .blood-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 cards per row */
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.blood-card {
+  perspective: 1000px;
+}
+
+.blood-front, .blood-back {
+  width: 100%;
+  padding: 40px 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  backface-visibility: hidden;
+  transition: transform 0.6s;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.blood-front {
+  background: #e63946;
+  color: white;
+  font-size: 1.5em;
+}
+
+.blood-back {
+  background: #f8f9fa;
+  color: #333;
+  transform: rotateY(180deg);
+  font-size: 0.9em;
+}
+
+.blood-card:hover .blood-front {
+  transform: rotateY(180deg);
+}
+
+.blood-card:hover .blood-back {
+  transform: rotateY(0deg);
+}html {
+  scroll-behavior: smooth;
+}
+
+
+  </style>
+</head>
+
+<body>
+  <header>
+    <h2>BloodConnect</h2>
+   <nav>
+  <a href="#" onclick="openModal('donorModal')">Donate</a>
+  <a href="#" onclick="openModal('findBloodModal')">Request</a>
+  <a href="#footer">Contact</a>
+  <button class="btn-login" onclick="openModal('loginModal')">Login</button>
+</nav>
+
+  </header>
+
+
+  <section class="hero">
+    <h1>Save Lives, Donate Blood</h1>
+    <p>Join our community of life-savers. Every drop counts in saving precious lives.</p>
+    <div> <button class="btn-donor" onclick="openModal('donorModal')">Register as Donor</button> <button
+        class="btn-hospital" onclick="openModal('hospitalModal')">Register Hospital</button> </div>
+    <div style="margin-top: 20px;"> <button class="btn-find" onclick="openModal('findBloodModal')">Find Blood</button>
+    </div>
+  </section>
+  <section class="stats">
+    <div class="stat-box">
+      <h2>2,847</h2>
+      <p>Lives Saved</p>
+    </div>
+    <div class="stat-box">
+      <h2>1,234</h2>
+      <p>Active Donors</p>
+    </div>
+    <div class="stat-box">
+      <h2>3</h2>
+      <p>Blood Banks</p>
+    </div>
+  </section>
+  <section class="how-it-works">
+    <h2>How It Works</h2>
+    <div class="steps">
+      <div class="step">
+        <h3>1. Register</h3>
+        <p>Sign up as a donor or hospital to get started.</p>
+      </div>
+      <div class="step">
+        <h3>2. Donate</h3>
+        <p>Find a nearby blood bank or request donation.</p>
+      </div>
+      <div class="step">
+        <h3>3. Save Lives</h3>
+        <p>Your donation helps hospitals and saves lives.</p>
+      </div>
+    </div>
+  </section>
+<section class="compatibility">
+  <h2>Blood Compatibility Chart</h2>
+  <div class="blood-cards">
+    <div class="blood-card">
+      <div class="blood-front">O-</div>
+      <div class="blood-back">
+        <p><strong>Donate To:</strong> All Blood Types</p>
+        <p><strong>Receive From:</strong> O-</p>
+      </div>
+    </div>
+    <div class="blood-card">
+      <div class="blood-front">O+</div>
+      <div class="blood-back">
+        <p><strong>Donate To:</strong> O+, A+, B+, AB+</p>
+        <p><strong>Receive From:</strong> O+, O-</p>
+      </div>
+    </div>
+    <div class="blood-card">
+      <div class="blood-front">A+</div>
+      <div class="blood-back">
+        <p><strong>Donate To:</strong> A+, AB+</p>
+        <p><strong>Receive From:</strong> A+, A-, O+, O-</p>
+      </div>
+    </div>
+    <div class="blood-card">
+      <div class="blood-front">A-</div>
+      <div class="blood-back">
+        <p><strong>Donate To:</strong> A+, A-, AB+, AB-</p>
+        <p><strong>Receive From:</strong> A-, O-</p>
+      </div>
+    </div>
+    
+    <div class="blood-card">
+      <div class="blood-front">B+</div>
+      <div class="blood-back">
+        <p><strong>Donate To:</strong> B+, AB+</p>
+        <p><strong>Receive From:</strong> B+, B-, O+, O-</p>
+      </div>
+    </div>
+    <div class="blood-card">
+      <div class="blood-front">B-</div>
+      <div class="blood-back">
+        <p><strong>Donate To:</strong> B+, B-, AB+, AB-</p>
+        <p><strong>Receive From:</strong> B-, O-</p>
+      </div>
+    </div>
+    <div class="blood-card">
+      <div class="blood-front">AB+</div>
+      <div class="blood-back">
+        <p><strong>Donate To:</strong> AB+</p>
+        <p><strong>Receive From:</strong> All Blood Types</p>
+      </div>
+    </div>
+    <div class="blood-card">
+      <div class="blood-front">AB-</div>
+      <div class="blood-back">
+        <p><strong>Donate To:</strong> AB+, AB-</p>
+        <p><strong>Receive From:</strong> AB-, A-, B-, O-</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="footer">
+  <p>&copy; 2025 BloodConnect | All Rights Reserved</p>
+</footer>
+
+  <!-- Donor Modal -->
+  <div id="donorModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('donorModal')">&times;</span>
+      <h2>Donor Registration</h2>
+      <form onsubmit="handleDonorSubmit(event)">
+        <label>Name:</label>
+        <input type="text" id="donorName" required>
+        <label>Email:</label>
+        <input type="email" id="donorEmail" required>
+        <label>Phone:</label>
+        <input type="tel" id="donorPhone" required>
+        <label>Blood Group:</label>
+        <select id="donorBlood" required>
+          <option value="">Select</option>
+          <option>O+</option>
+          <option>O-</option>
+          <option>A+</option>
+          <option>A-</option>
+          <option>B+</option>
+          <option>B-</option>
+          <option>AB+</option>
+          <option>AB-</option>
+        </select>
+        <label>Location:</label>
+        <input type="text" id="donorLocation" required>
+        <label>Password:</label>
+        <input type="password" id="donorPassword" required>
+
+       <button type="submit" class="submit-btn">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Hospital Modal -->
+  <div id="hospitalModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('hospitalModal')">&times;</span>
+      <h2>Hospital Registration</h2>
+      <form onsubmit="handleHospitalSubmit(event)">
+        <label>Hospital Name:</label>
+        <input type="text" id="hospitalName" required>
+        <label>Email:</label>
+        <input type="email" id="hospitalEmail" required>
+        <label>Phone:</label>
+        <input type="tel" id="hospitalPhone" required>
+        <label>Address:</label>
+        <input type="text" id="hospitalAddress" required>
+        <label>City:</label>
+        <input type="text" id="hospitalCity" required>
+        <label>Password:</label>
+        <input type="password" id="hospitalPassword" required>
+
+        <label>Available Blood Types (comma-separated):</label>
+        <input type="text" id="hospitalBlood" placeholder="O+, A-, B+, etc." required>
+
+        <button type="submit" class="submit-btn">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Find Blood Modal -->
+  <div id="findBloodModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('findBloodModal')">&times;</span>
+      <h2>Find Blood</h2>
+      <form onsubmit="handleFindBlood(event)">
+        <label>Blood Group Needed:</label>
+        <select id="findBloodGroup" required>
+          <option value="">Select</option>
+          <option>O+</option>
+          <option>O-</option>
+          <option>A+</option>
+          <option>A-</option>
+          <option>B+</option>
+          <option>B-</option>
+          <option>AB+</option>
+          <option>AB-</option>
+        </select>
+        <label>Location (City):</label>
+        <input type="text" id="findLocation" required>
+        <button type="submit" class="submit-btn">Search</button>
+      </form>
+      <div id="findResult" style="margin-top:15px; font-weight:bold;"></div>
+    </div>
+  </div>
+  <!-- Login Modal -->
+<!-- Login Modal -->
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('loginModal')">&times;</span>
+    <h2>Login</h2>
+
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <label>Login as:</label>
+      <select id="loginRole" required>
+        <option value="donor">Donor</option>
+        <option value="hospital">Hospital</option>
+      </select>
+
+      <label>Email:</label>
+      <input type="email" id="loginEmail" required>
+
+      <label>Password:</label>
+      <input type="password" id="loginPassword" required>
+
+      <button type="submit" class="submit-btn">Login</button>
+    </form>
+
+    <div id="loginError" style="color:#e63946; margin-top:12px; font-weight:600;"></div>
+  </div>
+</div>
+
+  <script>
+    function openModal(id) { document.getElementById(id).style.display = "flex"; }
+  function closeModal(id) { document.getElementById(id).style.display = "none"; }
+
+document.addEventListener("DOMContentLoaded", () => {
+  
+
+  window.addEventListener('click', (e) => {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(m => { if (e.target === m) m.style.display = 'none'; });
+  });
+
+  // ---------- Donor Registration ----------
+  async function handleDonorSubmit(event) {
+    event.preventDefault();
+    const donorData = {
+      name: document.getElementById("donorName").value,
+      email: document.getElementById("donorEmail").value,
+      phone: document.getElementById("donorPhone").value,
+      bloodGroup: document.getElementById("donorBlood").value,
+      location: document.getElementById("donorLocation").value,
+      password: document.getElementById("donorPassword").value,
+    };
+
+    try {
+      const res = await fetch("http://localhost:5000/api/donors/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(donorData)
+      });
+      if (!res.ok) throw new Error("Server error: " + res.status);
+      const data = await res.json();
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("name", donorData.name);
+        localStorage.setItem("role", "donor");
+        window.location.href = "donor-dashboard.html";
+      } else {
+        alert(data.message || "Registration failed");
+      }
+    } catch (err) {
+      alert("Error: " + err.message);
+    }
+  }
+
+  const donorForm = document.querySelector("#donorModal form");
+  if (donorForm) donorForm.addEventListener("submit", handleDonorSubmit);
+
+  // ---------- Hospital Registration ----------
+  async function handleHospitalSubmit(event) {
+    event.preventDefault();
+    const hospitalData = {
+      hospitalName: document.getElementById("hospitalName").value,
+      email: document.getElementById("hospitalEmail").value,
+      phone: document.getElementById("hospitalPhone").value,
+      address: document.getElementById("hospitalAddress").value,
+      city: document.getElementById("hospitalCity").value,
+      blood: document.getElementById("hospitalBlood").value.split(",").map(b => b.trim()),
+      password: document.getElementById("hospitalPassword").value
+    };
+
+    try {
+      const res = await fetch("http://localhost:5000/register-hospital", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(hospitalData)
+      });
+      if (!res.ok) throw new Error("Server error: " + res.status);
+      const data = await res.json();
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("name", hospitalData.hospitalName);
+        localStorage.setItem("role", "hospital");
+        localStorage.setItem("blood", JSON.stringify(hospitalData.blood));
+        localStorage.setItem("location", hospitalData.city);
+        window.location.href = "hospital-dashboard.html";
+      } else {
+        alert(data.message || "Registration failed");
+      }
+    } catch (err) {
+      alert("Error: " + err.message);
+    }
+  }
+
+  const hospitalForm = document.querySelector("#hospitalModal form");
+  if (hospitalForm) hospitalForm.addEventListener("submit", handleHospitalSubmit);
+document.addEventListener("DOMContentLoaded", () => {
+  const btnHospital = document.getElementById('btnHospitalRegister');
+  if (btnHospital) btnHospital.addEventListener('click', () => openModal('hospitalModal'));
+});
+ function handleHospitalSubmit(event) {
+    event.preventDefault();
+   const bloodArray = document.getElementById("hospitalBlood").value
+                  .split(",")
+                  .map(b => ({ type: b.trim(), units: 0 }));
+
+const hospitalData = {
+  hospitalName: document.getElementById("hospitalName").value,
+  email: document.getElementById("hospitalEmail").value,
+  phone: document.getElementById("hospitalPhone").value,
+  address: document.getElementById("hospitalAddress").value,
+  city: document.getElementById("hospitalCity").value,
+  blood: bloodArray,
+  password: document.getElementById("hospitalPassword").value
+};
+
+
+    fetch("http://localhost:5000/register-hospital", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(hospitalData)
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("name", hospitalData.hospitalName);
+        localStorage.setItem("role", "hospital");
+        localStorage.setItem("blood", JSON.stringify(hospitalData.blood));
+        localStorage.setItem("location", hospitalData.city);
+        window.location.href = "hospital-dashboard.html";
+      } else {
+        alert(data.message || "Registration failed");
+      }
+    })
+    .catch(err => alert("Error: " + err.message));
+  }
+
+  // Also make modal functions global
+  function openModal(id) { document.getElementById(id).style.display = "flex"; }
+  function closeModal(id) { document.getElementById(id).style.display = "none"; }
+  // ---------- Find Blood ----------
+  async function handleFindBlood(event) {
+    event.preventDefault();
+    const bloodGroup = document.getElementById("findBloodGroup").value;
+    const location = document.getElementById("findLocation").value;
+    const resultEl = document.getElementById("findResult");
+    try {
+      const res = await fetch("http://localhost:5000/api/find-blood", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bloodGroup, location })
+      });
+      if (!res.ok) throw new Error("Server error: " + res.status);
+      const data = await res.json();
+      resultEl.innerText = data.message || "No hospitals found.";
+    } catch (err) {
+      resultEl.innerText = "Error: " + err.message;
+    }
+  }
+
+  const findBloodForm = document.querySelector("#findBloodModal form");
+  if (findBloodForm) findBloodForm.addEventListener("submit", handleFindBlood);
+
+  // ---------- Login ----------
+  async function handleLogin(event) {
+    event.preventDefault();
+    const role = document.getElementById('loginRole').value;
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const errEl = document.getElementById('loginError');
+    errEl.innerText = '';
+
+    const endpoint = role === 'donor' ? 'http://localhost:5000/login-donor' : 'http://localhost:5000/login-hospital';
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        errEl.innerText = data.message || `Login failed (${res.status})`;
+        return;
+      }
+      if (data.token && (data.name || data.hospitalName)) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('name', data.name || data.hospitalName);
+        localStorage.setItem('role', role);
+        closeModal('loginModal');
+        window.location.href = role === 'donor' ? 'donor-dashboard.html' : 'hospital-dashboard.html';
+        return;
+      }
+      errEl.innerText = data.message || 'Login failed.';
+    } catch (err) {
+      errEl.innerText = 'Network error: ' + err.message;
+    }
+  }
+
+  const loginForm = document.getElementById("loginForm");
+  if (loginForm) loginForm.addEventListener("submit", handleLogin);
+
+  // ---------- Dummy Find Blood Data (frontend fallback) ----------
+  const hospitalsDummy = [
+    { name: "City Hospital", location: "Ranchi", blood: ["O+", "A+", "B+"], contact: "123-456-7890" },
+    { name: "Green Cross", location: "Delhi", blood: ["O-", "AB+", "A-"], contact: "987-654-3210" },
+    { name: "Sunrise Medical", location: "Bangalore", blood: ["O+", "AB-", "B-"], contact: "555-666-777" },
+    { name: "Global Care", location: "Ranchi", blood: ["A+", "O-"], contact: "444-888-222" },
+    { name: "HealthFirst", location: "Delhi", blood: ["B+", "AB+"], contact: "111-222-333" },
+    { name: "LifeLine Hospital", location: "Bangalore", blood: ["O-", "A-", "AB-"], contact: "999-888-777" }
+  ];
+
+  function searchBloodDummy() {
+    const bloodGroupEl = document.getElementById("findBloodGroup");
+    const locationEl = document.getElementById("findLocation");
+    const resultEl = document.getElementById("findResult");
+    if (!bloodGroupEl || !locationEl || !resultEl) return;
+
+    const bloodGroup = bloodGroupEl.value;
+    const location = locationEl.value.trim().toLowerCase();
+    resultEl.innerHTML = '';
+    if (!bloodGroup || !location) return;
+
+    const results = hospitalsDummy.filter(h =>
+      h.location.toLowerCase().includes(location) && h.blood.includes(bloodGroup)
+    );
+
+    if (results.length === 0) {
+      resultEl.innerHTML = `❌ No hospitals found with <b>${bloodGroup}</b> in <b>${location}</b>.`;
+      return;
+    }
+
+    let html = `<table style="width:100%; border-collapse: collapse; margin-top:10px;">
+                  <tr style="background:#e63946; color:white;">
+                    <th>Hospital</th>
+                    <th>Location</th>
+                    <th>Blood Available</th>
+                    <th>Contact</th>
+                  </tr>`;
+    results.forEach(h => {
+      html += `<tr style="border:1px solid #ddd; text-align:center;">
+                 <td>${h.name}</td>
+                 <td>${h.location}</td>
+                 <td>${h.blood.join(", ")}</td>
+                 <td>${h.contact}</td>
+               </tr>`;
+    });
+    html += `</table>`;
+    resultEl.innerHTML = html;
+  }
+
+  const findBloodGroupEl = document.getElementById("findBloodGroup");
+  const findLocationEl = document.getElementById("findLocation");
+  if (findBloodGroupEl && findLocationEl) {
+    findBloodGroupEl.addEventListener("change", searchBloodDummy);
+    findLocationEl.addEventListener("input", searchBloodDummy);
+  }
+
+  // ---------- Nav Toggle ----------
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => navLinks.classList.toggle('show'));
+  }
+
+  // ---------- Welcome Message ----------
+  const welcomeEl = document.getElementById('welcomeMessage');
+  if (welcomeEl) welcomeEl.innerText = `Welcome, ${localStorage.getItem('name') || 'User'}!`;
+});
+
+
+  </script>
+
+</body>
+
+</html>

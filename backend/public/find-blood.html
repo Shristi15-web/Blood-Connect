@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Find Blood - BloodConnect</title>
+  <style>
+    body {
+      margin: 0; font-family: Arial, sans-serif; background: #f9f9f9;
+    }
+    header {
+      background: #e63946; color: white; padding: 15px 30px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    header h2 { margin: 0; }
+    nav a {
+      color: white; margin-left: 20px; text-decoration: none; font-weight: bold;
+    }
+    nav a:hover { text-decoration: underline; }
+
+    .container {
+      max-width: 800px; margin: 30px auto; padding: 20px;
+      background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h3 { color: #e63946; display:flex; align-items:center; gap:8px; }
+
+    form {
+      display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;
+    }
+    label { font-weight: bold; }
+    input, select {
+      padding: 10px; border: 1px solid #ccc; border-radius: 5px;
+    }
+    button {
+      padding: 10px; background: #e63946; color: white;
+      border: none; border-radius: 5px; cursor: pointer; font-weight: bold;
+      display:flex; align-items:center; gap:5px;
+    }
+    button:hover { background: #c92f3d; }
+
+    table {
+      width: 100%; border-collapse: collapse; margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd; padding: 10px; text-align: center;
+    }
+    th { background: #e63946; color: white; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h2>BloodConnect</h2>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="donor-dashboard.html">Donor</a>
+    <a href="hospital-dashboard.html">Hospital</a>
+    <a href="find-blood.html">Find Blood</a>
+  </nav>
+</header>
+
+<div class="container">
+  <h3>🔍 Find Blood Availability</h3>
+  <form id="findBloodForm">
+    <label for="bloodGroup">Select Blood Group:</label>
+    <select id="bloodGroup" required>
+      <option value="">-- Select --</option>
+      <option>O+</option>
+      <option>O-</option>
+      <option>A+</option>
+      <option>A-</option>
+      <option>B+</option>
+      <option>B-</option>
+      <option>AB+</option>
+      <option>AB-</option>
+    </select>
+
+    <label for="location">Enter Your Location:</label>
+    <input type="text" id="location" placeholder="e.g. New York" required>
+  </form>
+
+  <h3>Nearby Hospitals</h3>
+  <table id="resultsTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>Hospital</th>
+        <th>Location</th>
+        <th>Blood Available</th>
+        <th>Contact</th>
+      </tr>
+    </thead>
+    <tbody id="resultsBody"></tbody>
+  </table>
+</div>
+
+<script>
+const bloodInput = document.getElementById('bloodGroup');
+const locationInput = document.getElementById('location');
+const table = document.getElementById('resultsTable');
+const tbody = document.getElementById('resultsBody');
+
+// Dummy hospitals data
+const hospitals = [
+  { name: "City Hospital", location: "New York", blood: ["O+", "A+", "B+"], contact: "123-456-7890" },
+  { name: "Green Cross", location: "Chicago", blood: ["O-", "AB+", "A-"], contact: "987-654-3210" },
+  { name: "Sunrise Medical", location: "New York", blood: ["O+", "AB-", "B-"], contact: "555-666-777" },
+  { name: "Global Care", location: "Boston", blood: ["A+", "O-"], contact: "444-888-222" }
+];
+
+// Function to search hospitals
+function searchHospitals() {
+  const bloodGroup = bloodInput.value;
+  const location = locationInput.value.trim().toLowerCase();
+
+  tbody.innerHTML = "";
+
+  if (!bloodGroup || !location) {
+    table.style.display = "none";
+    return;
+  }
+
+  const results = hospitals.filter(h =>
+    h &&
+    h.location &&
+    h.blood &&
+    h.location.toLowerCase().includes(location) &&
+    h.blood.includes(bloodGroup)
+  );
+
+  if (results.length > 0) {
+    results.forEach(h => {
+      const row = `<tr>
+        <td>${h.name || "N/A"}</td>
+        <td>${h.location || "N/A"}</td>
+        <td>${(h.blood && h.blood.join(", ")) || "N/A"}</td>
+        <td>${h.contact || "N/A"}</td>
+      </tr>`;
+      tbody.innerHTML += row;
+    });
+    table.style.display = "table";
+  } else {
+    tbody.innerHTML = `<tr><td colspan="4">❌ No hospitals found with <b>${bloodGroup}</b> in <b>${location}</b>.</td></tr>`;
+    table.style.display = "table";
+  }
+}
+
+// Listen to changes in blood group and location
+bloodInput.addEventListener('change', searchHospitals);
+locationInput.addEventListener('input', searchHospitals);
+
+</script>
+</body>
+</html>
